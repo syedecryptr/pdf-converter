@@ -31,6 +31,24 @@ public class PdfConverter {
         creator.process(pdf, output, resolution, width, height, format);
     }
 
+    public void intoEpub(String file_path, String title, File output){
+        try {
+            //File imgsdir = File.createTempFile(UUID.randomUUID().toString(), "");
+            Path imgsdir = new File(String.format(file_path+"/%s", UUID.randomUUID().toString())).toPath();
+            Files.createDirectories(imgsdir);
+
+
+            ImgCreator creator = new ImgCreator();
+            creator.process(pdf, imgsdir.toFile(), RESOLUTION, WIDTH, HEIGHT, ImageFileExtension.PNG);
+            EpubCreator epubCreator = new EpubCreator();
+            epubCreator.create(title, imgsdir.toFile(), output);
+            FileUtils.deleteDirectory(imgsdir.toFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void intoEpub(String title, File output){
         try {
             //File imgsdir = File.createTempFile(UUID.randomUUID().toString(), "");
